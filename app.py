@@ -6,24 +6,22 @@ app = Flask(__name__)
 def home():
     return "Roblox backend działa!"
 
-@app.route("/verify", methods=["POST"])
-def verify():
-    data = request.get_json(silent=True) or {}
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    data = request.get_json(silent=True)
 
-    place_id = data.get("placeId")
-
-    if place_id is None:
+    if not data:
         return jsonify({
             "success": False,
-            "error": "Missing PlaceId"
+            "error": "Invalid JSON"
         }), 400
 
-    print("PlaceId:", place_id)
+    print("Otrzymano dane:")
+    print(data)
 
     return jsonify({
-        "success": True,
-        "placeId": place_id
-    })
+        "success": True
+    }), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
